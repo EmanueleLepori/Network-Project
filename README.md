@@ -2,7 +2,7 @@
 
 A lightweight, asynchronous, and multithreaded Network Intrusion Prevention System written in Python. It sniffs network traffic in real-time, detects malicious behaviors (like SYN Floods, Port Scans, and UDP/ICMP floods), and automatically mitigates them by injecting `iptables` rules.
 
-## 📋 Prerequisites
+## Prerequisites
 
 To run this NIPS, you need a Linux environment (e.g., Ubuntu, Debian, Kali) because it relies heavily on Linux's `iptables` for mitigation.
 
@@ -52,19 +52,37 @@ To see the NIPS in action, leave it running on your VM and use another machine (
 
 **1. Port Scanning:**
 Use `nmap` to scan the VM:
-nmap -p 1-100 <VM_IP_ADDRESS>
 
-*Expected Result:* The NIPS will detect the scan, log the event, and block the attacker's IP.
+`nmap -p 1-100 <VICTIM_IP_ADDRESS>`
 
 **2. Ping Flood (ICMP):**
 Send a rapid stream of pings:
-sudo ping -f <VM_IP_ADDRESS>
+
+`sudo ping -f <VICTIM_IP_ADDRESS>`
 
 **3. SYN Flood (Requires hping3):**
 Simulate a TCP SYN Flood attack:
-sudo hping3 -S --flood -V -p 80 <VM_IP_ADDRESS>
 
-*Expected Result:* The NIPS will track the massive influx of SYN packets and trigger the `iptables` drop rule for the attacker (or trigger the Global DDoS mitigation if the global threshold is crossed).
+`sudo hping3 -S --flood -V -p 80 <VICTIM_IP_ADDRESS>`
+
+**4. UDP Flood:**
+Send a massive amount of UDP packets using hping3:
+
+`sudo hping3 --udp --flood -V -p 80 <VICTIM_IP_ADDRESS>`
+
+**5. SSH Brute Force:**
+Simulate a realistic dictionary/brute-force attack against the SSH service using Hydra:
+
+`hydra -l admin -x 3:3:a ssh://<VICTIM_IP_ADDRESS>`
+
+
+**6. Global DDoS (Distributed SYN Flood):**
+Simulate a massive SYN flood coming from *multiple, random source IPs* to bypass single-IP limits and trigger the global emergency mode (using `--rand-source`):
+
+`sudo hping3 -S --flood --rand-source -V -p 80 <VICTIM_IP_ADDRESS>`
+
+
+
 
 ---
 
