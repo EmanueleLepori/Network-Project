@@ -1,0 +1,16 @@
+.bash_history
+.bash_logout
+.bashrc
+.profile
+.wget-hsts
+.profile
+.wget-hsts
+nips_alerts.log
+
+router/
+.vscode-server/
+.ssh/
+.local/
+.config/
+.cache/
+__pycache__/
